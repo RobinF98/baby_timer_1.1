@@ -1,0 +1,10 @@
+{% extends "base.html" %} {% block content %}
+    <h1>Baby List</h1>
+    <ul> 
+        {% for baby in baby_list %}
+            <div>{{ baby.baby_name }}</div>
+            <div>{{ baby.user }}</div>
+            <br>
+        {% endfor %}
+    </ul>
+{% endblock %}
