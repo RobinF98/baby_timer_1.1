@@ -6,9 +6,23 @@
     <title>Baby Timer</title>
 </head>
 <body>
-    <nav>User: {{ user }}</nav>
+    <header>
+        <nav>
+            {% if user.is_authenticated %}
+                <p>Logged in as {{ user }}</p>
+                <a href="{% url 'account_logout' %}">Logout</a>
+            {% endif %}
+        </nav>
+    </header>
     {% block content %}
 
     {% endblock %}
+    <footer>
+        <div>
+            <p>
+                Footer
+            </p>
+        </div>
+    </footer>
 </body>
 </html>
