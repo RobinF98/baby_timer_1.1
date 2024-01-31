@@ -4,7 +4,7 @@ from .models import Baby
 # Create your views here.
 
 
-class BabyList(generic.ListView):
+class BabyListView(generic.ListView):
     model = Baby
     template_name = 'logs/index.html'
 
@@ -13,3 +13,7 @@ class BabyList(generic.ListView):
 
 # class BabyCreate(generic.edit.CreateView):
 #     model = baby
+
+
+class BabyDetailView(generic.detail.DetailView):
+    model = Baby
