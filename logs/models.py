@@ -1,8 +1,9 @@
 from email.policy import default
 from random import choices
+from urllib import request
 from django.db import models
 from django.forms import CharField
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 
 # Create your models here.
 
@@ -11,13 +12,20 @@ class Baby(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False,)
     baby_name = models.CharField("baby's name", max_length=50, blank=False,)
     birthday = models.DateField(("birthday"), blank=False,)
-    due_date = models.DateField("predicted due date",blank=False,)
+    due_date = models.DateField("predicted due date", blank=False,)
 
     def __str__(self):
         return self.baby_name
 
     class Meta:
         ordering = ["baby_name"]
+        permissions = [
+            ("can_view", "Can view baby details")
+        ]
+
+    def addPermission(self):
+        User.user_permissions.add(Permission.objects.get(codename="can_view"))
+        # add user permissions to view the baby details here
 
 
 class Diaper(models.Model):
