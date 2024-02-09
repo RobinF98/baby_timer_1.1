@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "user",
     "logs",
+    "bootstrap_datepicker_plus",
 ]
 
 LOGIN_REDIRECT_URL = '/'
