@@ -12,5 +12,14 @@
             <div>{{ baby.user }}</div>
             <br>
         {% endfor %}
+        <div class="container">
+            <div class="row">
+                <div class="col-6 col-md-4">
+                    <a href="{% url 'add_baby' %}">
+                        Add new baby
+                    </a>
+                </div>
+            </div>
+        </div>
     </ul>
 {% endblock %}
