@@ -1,3 +1,5 @@
+from pyexpat import model
+from turtle import update
 from typing import Any
 from urllib import request
 from django import forms
@@ -47,8 +49,18 @@ class BabyCreateView(generic.edit.CreateView):
         baby = form.save()
         return HttpResponseRedirect(reverse("home"))
 
-    # def get_success_url(self):
-    # #     return HttpResponseRedirect(reverse("home"))
-    # def post(self, request):
-    #     baby = BabyCreateView.save()
-    #     return HttpResponseRedirect(reverse("home"))
+
+class BabyUpdateView(generic.edit.UpdateView, BabyCreateView):
+    model = Baby
+
+    def get_initial(self):
+        initial = super(BabyUpdateView, self).get_initial()
+        print('initial data', initial)
+
+        # retrieve current object
+        baby_object = self.get_object()
+
+        initial['baby_name'] = baby_object.baby_name
+        initial['birthday'] = baby_object.birthday
+        initial['due_date'] = baby_object.due_date
+        return initial
