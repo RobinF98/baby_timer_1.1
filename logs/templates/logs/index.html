@@ -4,10 +4,17 @@
     <h1>Baby List</h1>
     <ul> 
         {% for baby in baby_list %}
-            <div>
-                <a href="{% url 'baby-detail' baby.id %}">
-                    {{ baby.baby_name }}
-                </a>
+            <div class="row">
+                <div class="col-4 col-md-3">
+                    <a href="{% url 'baby-detail' baby.id %}">
+                        {{ baby.baby_name }}
+                    </a>
+                </div>
+                <div class="col-4 col-md-3">
+                    <a href="{% url 'edit-baby' baby.id %}">
+                        Edit
+                    </a>
+                </div>
             </div>
             <div>{{ baby.user }}</div>
             <br>
@@ -15,7 +22,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-6 col-md-4">
-                    <a href="{% url 'add_baby' %}">
+                    <a href="{% url 'add-baby' %}">
                         Add new baby
                     </a>
                 </div>
