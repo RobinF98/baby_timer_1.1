@@ -1,4 +1,3 @@
-from pyexpat import model
 from turtle import update
 from typing import Any
 from urllib import request
@@ -50,8 +49,20 @@ class BabyCreateView(generic.edit.CreateView):
         return HttpResponseRedirect(reverse("home"))
 
 
-class BabyUpdateView(generic.edit.UpdateView, BabyCreateView):
+class BabyUpdateView(generic.edit.UpdateView):
     model = Baby
+
+    fields = [
+        "baby_name",
+        "birthday",
+        "due_date",
+        ]
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields["birthday"].widget = DatePickerInput()
+        form.fields["due_date"].widget = DatePickerInput()
+        return form
 
     def get_initial(self):
         initial = super(BabyUpdateView, self).get_initial()
@@ -64,3 +75,13 @@ class BabyUpdateView(generic.edit.UpdateView, BabyCreateView):
         initial['birthday'] = baby_object.birthday
         initial['due_date'] = baby_object.due_date
         return initial
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(reverse("home"))
+
+
+class BabyDeleteView(generic.edit.DeleteView):
+    model = Baby
+    template_name = "baby_detail.html"
+    success_url = "/"
