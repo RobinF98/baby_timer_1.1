@@ -1,0 +1,45 @@
+{% extends "base.html" %}\
+{% block content %}
+<!-- buttonsup
+    top for adding logs, or a dropown ,
+
+then below a list of all logs 
+will need create pages for feed sleep meds , also view, edit, and delete-->
+<!-- is this a list view? problably. that would work for the logs and then have a row up at the top with add buttons etc etc
+FOR BUTTON GROUP SCROLL
+.pre-scrollable {
+  max-height: 340px;
+  overflow-y: scroll;
+}-->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h3>{{ baby.baby_name }}</h3>
+            <small class="text-muted">{{ baby.user }}</small>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+
+    </div>
+    <div class="row">
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-primary">Nappy</button>
+            <button type="button" class="btn btn-primary">Feed</button>
+            <button type="button" class="btn btn-primary">Sleep</button>
+            <button type="button" class="btn btn-primary">Medication</button>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    {% for diaper in diapers %}
+    <div class="row">
+        {{diaper.baby}}
+        {{diaper.time}}
+
+        {{diaper.type}}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

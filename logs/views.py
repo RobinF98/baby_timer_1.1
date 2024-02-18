@@ -11,13 +11,14 @@ from django.contrib.auth.models import User
 from django.urls import reverse, reverse_lazy
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput
 from requests import options
-from .models import Baby
+from .models import Baby, Diaper
+
 # Create your views here.
 
 
 class BabyListView(LoginRequiredMixin, generic.ListView):
     model = Baby
-    template_name = 'logs/index.html'
+    template_name = "logs/index.html"
 
     def get_queryset(self):
         return self.model.objects.filter(user=self.request.user)
@@ -56,7 +57,7 @@ class BabyUpdateView(generic.edit.UpdateView):
         "baby_name",
         "birthday",
         "due_date",
-        ]
+    ]
 
     def get_form(self):
         form = super().get_form()
@@ -66,14 +67,14 @@ class BabyUpdateView(generic.edit.UpdateView):
 
     def get_initial(self):
         initial = super(BabyUpdateView, self).get_initial()
-        print('initial data', initial)
+        print("initial data", initial)
 
         # retrieve current object
         baby_object = self.get_object()
 
-        initial['baby_name'] = baby_object.baby_name
-        initial['birthday'] = baby_object.birthday
-        initial['due_date'] = baby_object.due_date
+        initial["baby_name"] = baby_object.baby_name
+        initial["birthday"] = baby_object.birthday
+        initial["due_date"] = baby_object.due_date
         return initial
 
     def form_valid(self, form):
@@ -85,3 +86,14 @@ class BabyDeleteView(generic.edit.DeleteView):
     model = Baby
     template_name = "baby_detail.html"
     success_url = "/"
+
+
+class LogsView(generic.ListView, View):
+    model = Baby
+    template_name = "logs/logs.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["diapers"] = Diaper.objects.filter(baby_id=self.kwargs["pk"])
+        context["baby"] = Baby.objects.filter(id=self.kwargs["pk"])[0]
+        return context
