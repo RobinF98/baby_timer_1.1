@@ -1,7 +1,7 @@
-from turtle import update
-from typing import Any
-from urllib import request
-from django import forms
+# from turtle import update
+# from typing import Any
+# from urllib import request
+# from django import forms
 from django.forms.models import BaseModelForm
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.models import User
 from django.urls import reverse, reverse_lazy
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput
-from requests import options
+# from requests import options
 from .models import Baby, Diaper
 
 # Create your views here.
@@ -32,6 +32,8 @@ class BabyCreateView(generic.edit.CreateView):
     # set user field to current user
 
     model = Baby
+    template_name = "logs/generic_form.html"
+
     fields = [
         "baby_name",
         "birthday",
@@ -52,6 +54,7 @@ class BabyCreateView(generic.edit.CreateView):
 
 class BabyUpdateView(generic.edit.UpdateView):
     model = Baby
+    template_name = "logs/generic_form.html"
 
     fields = [
         "baby_name",
@@ -67,7 +70,6 @@ class BabyUpdateView(generic.edit.UpdateView):
 
     def get_initial(self):
         initial = super(BabyUpdateView, self).get_initial()
-        print("initial data", initial)
 
         # retrieve current object
         baby_object = self.get_object()
@@ -97,3 +99,17 @@ class LogsView(generic.ListView, View):
         context["diapers"] = Diaper.objects.filter(baby_id=self.kwargs["pk"])
         context["baby"] = Baby.objects.filter(id=self.kwargs["pk"])[0]
         return context
+
+
+class DiaperCreateView(generic.CreateView):
+    model = Diaper
+    template_name = "logs/generic_form.html"
+    fields = [
+        "time",
+        "type",
+    ]
+
+    def form_valid(self, form):
+        form.instance.baby_id = self.kwargs["pk"]
+        form.save()
+        return HttpResponseRedirect(reverse("home"))
