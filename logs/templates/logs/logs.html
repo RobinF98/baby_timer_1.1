@@ -25,7 +25,9 @@ FOR BUTTON GROUP SCROLL
     </div>
     <div class="row">
         <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-primary">Nappy</button>
+            <a href="{% url 'add-diaper' baby.id %}">
+                <button type="button" class="btn btn-primary" >Nappy</button>
+            </a>
             <button type="button" class="btn btn-primary">Feed</button>
             <button type="button" class="btn btn-primary">Sleep</button>
             <button type="button" class="btn btn-primary">Medication</button>
@@ -36,10 +38,14 @@ FOR BUTTON GROUP SCROLL
     {% for diaper in diapers %}
     <div class="row">
         {{diaper.baby}}
+    </div>
+    <div class="row">
         {{diaper.time}}
-
+    </div>
+    <div class="row">
         {{diaper.type}}
     </div>
+    <br>
     {% endfor %}
 </div>
 {% endblock %}

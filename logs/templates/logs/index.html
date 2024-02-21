@@ -9,6 +9,9 @@
                     <a href="{% url 'baby-detail' baby.id %}">
                         {{ baby.baby_name }}
                     </a>
+                    <a href="{% url 'logs' baby.id%}">
+                        Logs
+                    </a>
                 </div>
                 <div class="col-4 col-md-3">
                     <a href="{% url 'edit-baby' baby.id %}">
