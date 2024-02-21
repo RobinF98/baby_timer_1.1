@@ -4,7 +4,7 @@ from urllib import request
 from django.db import models
 from django.forms import CharField
 from django.contrib.auth.models import User, Permission
-
+from datetime import datetime
 # Create your models here.
 
 
@@ -35,7 +35,7 @@ class Diaper(models.Model):
         "WD": "Wet and Dirty"
     }
     baby = models.ForeignKey(Baby, on_delete=models.CASCADE, blank=False,)
-    time = models.DateTimeField(auto_now_add=True, blank=False,)
+    time = models.DateTimeField(default = datetime.now, blank=False)
     type = models.CharField(
         choices=DIAPER_TYPE_CHOICES,
         default="WT",
