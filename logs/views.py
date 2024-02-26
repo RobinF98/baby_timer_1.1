@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse, reverse_lazy
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput
 # from requests import options
-from .models import Baby, Diaper
+from .models import Baby, Diaper, Sleep
 
 # Create your views here.
 
@@ -26,6 +26,10 @@ class BabyListView(LoginRequiredMixin, generic.ListView):
 
 class BabyDetailView(generic.detail.DetailView):
     model = Baby
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["baby_list"] = Baby.objects.filter(user=self.object.user.id)
+        return context
 
 
 class BabyCreateView(generic.edit.CreateView):
@@ -97,6 +101,7 @@ class LogsView(generic.ListView, View):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["diapers"] = Diaper.objects.filter(baby_id=self.kwargs["pk"])
+        context["sleeps"] = Sleep.objects.filter(baby_id=self.kwargs["pk"])
         context["baby"] = Baby.objects.filter(id=self.kwargs["pk"])[0]
         return context
 
@@ -107,9 +112,44 @@ class DiaperCreateView(generic.CreateView):
     fields = [
         "time",
         "type",
+        "notes",
     ]
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields["time"].widget = DateTimePickerInput()
+        return form
 
     def form_valid(self, form):
         form.instance.baby_id = self.kwargs["pk"]
         form.save()
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseRedirect(reverse("logs", args=[form.instance.baby_id]))
+
+
+class DiaperUpdateView(generic.edit.UpdateView):
+    model = Diaper
+    template_name = "logs/generic_form.html"
+    fields = [
+        "time",
+        "type",
+        "notes",
+    ]
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields["time"].widget = DateTimePickerInput()
+        return form
+
+    def get_initial(self):
+        initial = super(DiaperUpdateView, self).get_initial()
+
+        # retrieve current object
+        diaper_object = self.get_object()
+
+        initial["type"] = diaper_object.type
+        initial["time"] = diaper_object.time
+        return initial
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(reverse("logs", args=[form.instance.baby_id]))
