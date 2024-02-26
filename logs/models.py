@@ -35,7 +35,7 @@ class Diaper(models.Model):
         "WD": "Wet and Dirty"
     }
     baby = models.ForeignKey(Baby, on_delete=models.CASCADE, blank=False,)
-    time = models.DateTimeField(default = datetime.now, blank=False)
+    time = models.DateTimeField(default=datetime.now, blank=False)
     type = models.CharField(
         choices=DIAPER_TYPE_CHOICES,
         default="WT",
@@ -46,7 +46,7 @@ class Diaper(models.Model):
 
 class Sleep(models.Model):
     baby = models.ForeignKey(Baby, on_delete=models.CASCADE, blank=False,)
-    start_time = models.DateTimeField("Sleep start time", auto_now_add=True, blank=False,)
+    start_time = models.DateTimeField("Sleep start time", default=datetime.now, blank=False,)
     end_time = models.DateTimeField("Sleep end time", blank=False,)
     notes = models.TextField(blank=True,)
 
