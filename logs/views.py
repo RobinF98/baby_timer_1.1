@@ -1,7 +1,7 @@
 # from turtle import update
 # from typing import Any
 # from urllib import request
-# from django import forms
+from django import forms
 from django.forms.models import BaseModelForm
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
@@ -9,8 +9,10 @@ from django.views import generic, View
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import User
 from django.urls import reverse, reverse_lazy
-from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput, TimePickerInput
 # from requests import options
+from operator import attrgetter
+from itertools import chain
 from .models import Baby, Diaper, Sleep
 
 # Create your views here.
@@ -26,6 +28,7 @@ class BabyListView(LoginRequiredMixin, generic.ListView):
 
 class BabyDetailView(generic.detail.DetailView):
     model = Baby
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["baby_list"] = Baby.objects.filter(user=self.object.user.id)
@@ -42,6 +45,7 @@ class BabyCreateView(generic.edit.CreateView):
         "baby_name",
         "birthday",
         "due_date",
+        "notes",
     ]
 
     def get_form(self):
@@ -50,9 +54,14 @@ class BabyCreateView(generic.edit.CreateView):
         form.fields["due_date"].widget = DatePickerInput()
         return form
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["add_baby"] = True
+        return context
+
     def form_valid(self, form):
         form.instance.user = self.request.user
-        baby = form.save()
+        form.save()
         return HttpResponseRedirect(reverse("home"))
 
 
@@ -103,6 +112,11 @@ class LogsView(generic.ListView, View):
         context["diapers"] = Diaper.objects.filter(baby_id=self.kwargs["pk"])
         context["sleeps"] = Sleep.objects.filter(baby_id=self.kwargs["pk"])
         context["baby"] = Baby.objects.filter(id=self.kwargs["pk"])[0]
+        # merge diapers and sleeps into 1 entry:
+        context["logs_list"] = sorted(
+            chain(context["sleeps"], context["diapers"]),
+            key=attrgetter("time")
+        )
         return context
 
 
@@ -119,6 +133,15 @@ class DiaperCreateView(generic.CreateView):
         form = super().get_form()
         form.fields["time"].widget = DateTimePickerInput()
         return form
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context["baby_list"] = Baby.objects.filter(user=self.object.user.id)
+    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["baby"] = Baby.objects.filter(id=self.kwargs["pk"])[0]
+        return context
 
     def form_valid(self, form):
         form.instance.baby_id = self.kwargs["pk"]
@@ -150,6 +173,59 @@ class DiaperUpdateView(generic.edit.UpdateView):
         initial["time"] = diaper_object.time
         return initial
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["edit_view"] = True
+        context["baby"] = Baby.objects.filter(id=self.object.baby.id)[0]
+        return context
+
     def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(reverse("logs", args=[form.instance.baby_id]))
+
+
+class DiaperDeleteView(generic.edit.DeleteView):
+    model = Diaper
+    template_name = "logs/generic_form.html"
+
+    def get_success_url(self, **kwargs):
+        return reverse("logs", args=[self.object.baby_id])
+
+
+class SleepCreateView(generic.CreateView):
+    model = Sleep
+    template_name = "logs/generic_form.html"
+    fields = [
+        "time",
+        "end_time",
+        "notes",
+    ]
+
+    class Meta:
+        model = Sleep
+        fields = [
+            "time",
+            "end_time",
+            "notes",
+            "duration",
+        ]
+    other = forms.IntegerField()
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields["time"].widget = DateTimePickerInput()
+        form.fields["end_time"].widget = DateTimePickerInput()
+        # TODO SET THE BELOW TO WHAT IT NEEDS TO BE I GUESS - SLEEP DURATION THING SO DATE TIME FIELD WITH TIME WIDGET?
+        form.fields["duration"] = forms.TimeField()
+        form.fields["duration"].widget = TimePickerInput()
+        return form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["baby"] = Baby.objects.filter(id=self.kwargs["pk"])[0]
+        return context
+
+    def form_valid(self, form):
+        form.instance.baby_id = self.kwargs["pk"]
         form.save()
         return HttpResponseRedirect(reverse("logs", args=[form.instance.baby_id]))
