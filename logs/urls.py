@@ -10,4 +10,6 @@ urlpatterns = [
     path("logs/<int:pk>", views.LogsView.as_view(), name="logs"),
     path("logs/<int:pk>/diaper", views.DiaperCreateView.as_view(), name="add-diaper"),
     path("logs/edit_diaper/<int:pk>", views.DiaperUpdateView.as_view(), name="edit-diaper"),
+    path("logs/<int:pk>/sleep", views.SleepCreateView.as_view(), name="add-sleep"),
+    path("logs/delete_diaper/<int:pk>", views.DiaperDeleteView.as_view(), name="delete-object"),
 ]
