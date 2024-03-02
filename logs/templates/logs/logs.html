@@ -1,4 +1,6 @@
-{% extends "base.html" %}\
+{% extends "base.html" %}
+{% load to_class_name %}
+
 {% block content %}
 <!-- buttonsup
     top for adding logs, or a dropown ,
@@ -29,7 +31,9 @@ FOR BUTTON GROUP SCROLL
                 <button type="button" class="btn btn-primary">Nappy</button>
             </a>
             <button type="button" class="btn btn-primary">Feed</button>
-            <button type="button" class="btn btn-primary">Sleep</button>
+            <a href="{% url 'add-sleep' baby.id %}">
+                <button type="button" class="btn btn-primary">Sleep</button>
+            </a>
             <button type="button" class="btn btn-primary">Medication</button>
         </div>
     </div>
@@ -38,22 +42,31 @@ FOR BUTTON GROUP SCROLL
     <!--consider making into a striped table -->
     <div class="row">
         <ul class="list-group">
-            {% for diaper in diapers %}
-                <a href="{% url 'edit-diaper' diaper.id %}" class="list-group-item list-group-item-action">
-                    <table class="table table-dark">
-                        <tbody>
-                            <tr>
-                                <td>{{diaper.baby}}</td>
-                            </tr>
-                            <tr>
-                                <td>{{diaper.time}}</td>
-                            </tr>
-                            <tr>
-                                <td>{{diaper.type}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            {% for entry in logs_list %}
+            <li>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <table class="table table-dark">
+                                <tbody>
+                                    <tr>
+                                        <td>{{entry | to_class_name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{entry.time}}</td>
+                                    </tr>
+                                    <tr>
+                                        <!-- <td>{{diaper.type}}</td> -->
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            {{entry.notes}}
+                        </div>
+                    </div>
                 </a>
+            </li>
             {% endfor %}
         </ul>
     </div>
