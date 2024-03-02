@@ -13,6 +13,8 @@ class Baby(models.Model):
     baby_name = models.CharField("baby's name", max_length=50, blank=False,)
     birthday = models.DateField(("birthday"), blank=False,)
     due_date = models.DateField("predicted due date", blank=False,)
+    notes = models.TextField(blank=True,)
+    
 
     def __str__(self):
         return self.baby_name
@@ -46,7 +48,7 @@ class Diaper(models.Model):
 
 class Sleep(models.Model):
     baby = models.ForeignKey(Baby, on_delete=models.CASCADE, blank=False,)
-    start_time = models.DateTimeField("Sleep start time", default=datetime.now, blank=False,)
+    time = models.DateTimeField("Sleep start time", default=datetime.now, blank=False,)
     end_time = models.DateTimeField("Sleep end time", blank=False,)
     notes = models.TextField(blank=True,)
 
