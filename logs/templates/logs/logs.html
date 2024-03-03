@@ -50,13 +50,19 @@ FOR BUTTON GROUP SCROLL
                             <table class="table table-dark">
                                 <tbody>
                                     <tr>
-                                        <td>{{entry | to_class_name}}</td>
+                                        <td>{{entry|to_class_name}}</td>
                                     </tr>
                                     <tr>
-                                        <td>{{entry.time}}</td>
-                                    </tr>
-                                    <tr>
-                                        <!-- <td>{{diaper.type}}</td> -->
+                                        <td>
+                                            {{entry.time}}
+                                            {% if entry|to_class_name == "Sleep" %}
+                                            to {{entry.end_time}}
+                                            </td>
+                                            <tr>
+                                                <td>
+                                                    Slept for {{entry.end_time|timeuntil:entry.time}}
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
