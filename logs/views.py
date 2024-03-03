@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.models import User
 from django.urls import reverse, reverse_lazy
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput, TimePickerInput
+from django.core.exceptions import ValidationError
 # from requests import options
 from operator import attrgetter
 from itertools import chain
@@ -209,7 +210,7 @@ class SleepCreateView(generic.CreateView):
             "time",
             "end_time",
             "notes",
-            "duration",
+            # "duration",
         ]
 
     def get_form(self):
@@ -217,14 +218,21 @@ class SleepCreateView(generic.CreateView):
         form.fields["time"].widget = DateTimePickerInput()
         form.fields["end_time"].widget = DateTimePickerInput()
         # TODO SET THE BELOW TO WHAT IT NEEDS TO BE I GUESS - SLEEP DURATION THING SO DATE TIME FIELD WITH TIME WIDGET?
-        form.fields["duration"] = forms.TimeField()
-        form.fields["duration"].widget = TimePickerInput()
+        # form.fields["duration"] = forms.DurationField(required=False, disabled=True)
+        # form.fields["duration"].widget = TimePickerInput()
         return form
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["baby"] = Baby.objects.filter(id=self.kwargs["pk"])[0]
         return context
+
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     time = cleaned_data.get("time")
+    #     end_time = cleaned_data.get("end_time")
+    #     if end_time < time:
+    #         raise forms.ValidationError("End time should be later than start time.")
 
     def form_valid(self, form):
         form.instance.baby_id = self.kwargs["pk"]
@@ -234,20 +242,31 @@ class SleepCreateView(generic.CreateView):
 
 class SleepUpdateView(generic.UpdateView):
     model = Sleep
+    template_name = "logs/generic_form.html"
     fields = [
         "time",
         "end_time",
         "notes",
-        "duration",
     ]
+
+    class Meta:
+        model = Sleep
+        fields = [
+            "time",
+            "end_time",
+            "notes",
+            # "duration",
+        ]
 
     def get_form(self):
         form = super().get_form()
+        form.fields["end_time"] = forms.DateTimeField()
+
         form.fields["time"].widget = DateTimePickerInput()
         form.fields["end_time"].widget = DateTimePickerInput()
         # TODO SET THE BELOW TO WHAT IT NEEDS TO BE I GUESS - SLEEP DURATION THING SO DATE TIME FIELD WITH TIME WIDGET?
-        form.fields["duration"] = forms.TimeField()
-        form.fields["duration"].widget = TimePickerInput()
+        # form.fields["duration"] = forms.DurationField(required=False, disabled=True)
+        # form.fields["duration"].widget = TimePickerInput()
         return form
 
     def get_initial(self):
@@ -258,15 +277,20 @@ class SleepUpdateView(generic.UpdateView):
 
         initial["time"] = sleep_object.time
         initial["end_time"] = sleep_object.end_time
+        # initial["duration"] = sleep_object.end_time - sleep_object.time
         return initial
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["baby"] = Baby.objects.filter(id=self.kwargs["pk"])[0]
+        context["baby"] = Baby.objects.filter(id=self.object.baby.id)[0]
+        context["edit_view"] = True
         return context
 
+    # def validate_end_time(value, form):
+    #     if value < form.instance.time:
+    #         raise ValidationError("End time should be later than start time.")
+
     def form_valid(self, form):
-        form.instance.baby_id = self.kwargs["pk"]
         form.save()
         return HttpResponseRedirect(reverse("logs", args=[form.instance.baby_id]))
 
