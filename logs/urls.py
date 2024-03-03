@@ -12,4 +12,5 @@ urlpatterns = [
     path("logs/edit_diaper/<int:pk>", views.DiaperUpdateView.as_view(), name="edit-diaper"),
     path("logs/<int:pk>/sleep", views.SleepCreateView.as_view(), name="add-sleep"),
     path("logs/delete_diaper/<int:pk>", views.DiaperDeleteView.as_view(), name="delete-object"),
+    path("logs/edit_sleep/<int:pk>",views.SleepUpdateView.as_view(), name="edit-sleep")
 ]

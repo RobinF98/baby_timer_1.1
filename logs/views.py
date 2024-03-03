@@ -115,7 +115,8 @@ class LogsView(generic.ListView, View):
         # merge diapers and sleeps into 1 entry:
         context["logs_list"] = sorted(
             chain(context["sleeps"], context["diapers"]),
-            key=attrgetter("time")
+            key=attrgetter("time"),
+            reverse=True
         )
         return context
 
@@ -171,6 +172,7 @@ class DiaperUpdateView(generic.edit.UpdateView):
 
         initial["type"] = diaper_object.type
         initial["time"] = diaper_object.time
+        initial["notes"] = diaper_object.notes
         return initial
 
     def get_context_data(self, **kwargs):
@@ -209,7 +211,6 @@ class SleepCreateView(generic.CreateView):
             "notes",
             "duration",
         ]
-    other = forms.IntegerField()
 
     def get_form(self):
         form = super().get_form()
@@ -229,3 +230,43 @@ class SleepCreateView(generic.CreateView):
         form.instance.baby_id = self.kwargs["pk"]
         form.save()
         return HttpResponseRedirect(reverse("logs", args=[form.instance.baby_id]))
+
+
+class SleepUpdateView(generic.UpdateView):
+    model = Sleep
+    fields = [
+        "time",
+        "end_time",
+        "notes",
+        "duration",
+    ]
+
+    def get_form(self):
+        form = super().get_form()
+        form.fields["time"].widget = DateTimePickerInput()
+        form.fields["end_time"].widget = DateTimePickerInput()
+        # TODO SET THE BELOW TO WHAT IT NEEDS TO BE I GUESS - SLEEP DURATION THING SO DATE TIME FIELD WITH TIME WIDGET?
+        form.fields["duration"] = forms.TimeField()
+        form.fields["duration"].widget = TimePickerInput()
+        return form
+
+    def get_initial(self):
+        initial = super(SleepUpdateView, self).get_initial()
+
+        # retrieve current object
+        sleep_object = self.get_object()
+
+        initial["time"] = sleep_object.time
+        initial["end_time"] = sleep_object.end_time
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["baby"] = Baby.objects.filter(id=self.kwargs["pk"])[0]
+        return context
+
+    def form_valid(self, form):
+        form.instance.baby_id = self.kwargs["pk"]
+        form.save()
+        return HttpResponseRedirect(reverse("logs", args=[form.instance.baby_id]))
+
