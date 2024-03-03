@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load to_class_name %}
+{% load custom_filters %}
 
 {% block content %}
 <!-- buttonsup
@@ -44,7 +44,7 @@ FOR BUTTON GROUP SCROLL
         <ul class="list-group">
             {% for entry in logs_list %}
             <li>
-                <a href="#" class="list-group-item list-group-item-action">
+                <a href="{% url entry|to_class_name|to_edit_url entry.id %}" class="list-group-item list-group-item-action">
                     <div class="row">
                         <div class="col-md-4">
                             <table class="table table-dark">
