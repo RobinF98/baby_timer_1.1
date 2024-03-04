@@ -227,14 +227,14 @@ class SleepCreateView(generic.CreateView):
         context["baby"] = Baby.objects.filter(id=self.kwargs["pk"])[0]
         return context
 
-    # def clean(self):
-    #     cleaned_data = super().clean()
-    #     time = cleaned_data.get("time")
-    #     end_time = cleaned_data.get("end_time")
-    #     if end_time < time:
-    #         raise forms.ValidationError("End time should be later than start time.")
-
     def form_valid(self, form):
+
+        # custom validation - check end time is after start time
+        if form.cleaned_data["time"] > form.cleaned_data["end_time"]:
+            form.add_error("end_time", "End time cannot be before start time")
+            return self.form_invalid(form)
+
+        # set baby for diaper
         form.instance.baby_id = self.kwargs["pk"]
         form.save()
         return HttpResponseRedirect(reverse("logs", args=[form.instance.baby_id]))
@@ -286,11 +286,12 @@ class SleepUpdateView(generic.UpdateView):
         context["edit_view"] = True
         return context
 
-    # def validate_end_time(value, form):
-    #     if value < form.instance.time:
-    #         raise ValidationError("End time should be later than start time.")
-
     def form_valid(self, form):
+
+        # custom validation - check end time is after start time
+        if form.cleaned_data["time"] > form.cleaned_data["end_time"]:
+            form.add_error("end_time", "End time cannot be before start time")
+            return self.form_invalid(form)
+
         form.save()
         return HttpResponseRedirect(reverse("logs", args=[form.instance.baby_id]))
-
