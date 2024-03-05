@@ -2,16 +2,17 @@
 {% block content %}
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <!-- <input type="button" name="" id="">  IMPLEMENT A CANCEL BUTTON USING VIEW DEFINED URLS TO GO BACK TO WHATEVER THE PREVIOUS PAGE WAS-->
-    <input type="submit" value="Save">
+    <table class="table">
+        {{ form.as_table }}
+    </table>
+    <input type="submit" class="btn btn-success" value="Save">
     {% if add_baby %}
     <a href="{% url 'home' %}" class="btn btn-secondary">Cancel</a>
     {% else %}
     <a href="{% url 'logs' baby.id %}" class="btn btn-secondary">Cancel</a>
     {% endif %}
     {% if edit_view %}
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal">
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
         Delete
     </button>
     {% endif %}
