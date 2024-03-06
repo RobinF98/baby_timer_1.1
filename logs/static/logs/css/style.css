@@ -11,5 +11,46 @@ main {
 /* GenericForm Styles */
 /* .generic-form-table td{
     text-align: right;
-    color: red;
 } */
+
+.errorlist {
+    padding: 0;
+    list-style-type: none;
+    color: crimson;
+}
+
+/****** BOOTSTRAP LOGIN FORM ******/
+.form-signin {
+    max-width: 330px;
+    padding: 1rem;
+}
+
+.form-signin .form-floating:focus-within {
+    z-index: 2;
+}
+
+.form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* .form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+} */
+
+#password2, #password {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+#password1 {
+    /* border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0; */
+    border-radius: 0;
+}
