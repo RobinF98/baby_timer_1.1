@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load allauth i18n %}
+{% block content %}
+<h1>Signup</h1>
+<p>
+    Already have an account? Then please <a href="{{ login_url }}">sign in</a>.
+</p>
+<div class="form-signin w-100 m-auto">
+    <form method="post" action="{% url 'account_signup' %}">
+        {% csrf_token %}
+
+        {{ form.non_field_errors | safe }}
+        <div class="invalid-feedback">
+            {{ form.non_field_errors | safe }}
+        </div>
+        <h1 class="h3 mb-3 fw-normal">Create your account</h1>
+        <!-- {{ form.as_p }} -->
+        <div class="invalid-feedback">
+            {{ form.username.errors | safe }}
+        </div>
+        <div class="form-floating">
+                {% render_field form.username placeholder="Username" id="username" name="username" type="text" autocomplete="username" required="True" class="form-control" %}
+            <label for="floatingInput">Username</label>
+        </div>
+        {{ form.password1.errors | safe }}
+        <div class="form-floating">
+            {% render_field form.password1 id="password1" placeholder="Password" type="password" required="True" class="form-control" %}
+            <label for="floatingPassword">Password</label>
+        </div>
+        <div class="invalid-feedback">
+            {{ form.password2.errors | safe }}
+        </div>
+        <div class="form-floating">
+            {% render_field form.password2 id="password2" placeholder="Confirm password" type="password" required="True" class="form-control" %}
+            <label for="floatingPassword">Confirm Password</label>
+        </div>
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+        <button class="btn btn-primary w-100 py-2" type="submit">Sign up</button>
+    </form>
+    <div>
+        <h4 class="m-3 fw-normal">Password requirements</h4>
+        <ul>
+            <li>8 or more characters</li>
+            <li>Be cool</li>
+            <li>not be similar to user name</li>
+        </ul>
+    </div>
+</div>
+
+{% endblock content %}
