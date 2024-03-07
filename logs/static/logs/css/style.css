@@ -19,6 +19,11 @@ main {
     color: crimson;
 }
 
+.btn-edit-logs {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
 /****** BOOTSTRAP LOGIN FORM ******/
 .form-signin {
     max-width: 330px;
