@@ -14,9 +14,14 @@ main {
 } */
 
 .errorlist {
-    padding: 0;
+    padding: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     list-style-type: none;
-    color: crimson;
+    color: #ea868f;
+    border: solid 1px #842029;
+    border-radius: 6px;
+    background-color: #2c0b0e;
 }
 
 .btn-edit-logs {
@@ -26,8 +31,10 @@ main {
 
 /****** BOOTSTRAP LOGIN FORM ******/
 .form-signin {
-    max-width: 330px;
+    max-width: 500px;
     padding: 1rem;
+    margin-top: 7rem;
+    margin: 3rem;
 }
 
 .form-signin .form-floating:focus-within {

@@ -2,19 +2,19 @@
 {% load widget_tweaks %}
 {% load allauth i18n %}
 {% block content %}
-<h1>Signup</h1>
-<p>
-    Already have an account? Then please <a href="{{ login_url }}">sign in</a>.
-</p>
+
 <div class="form-signin w-100 m-auto">
     <form method="post" action="{% url 'account_signup' %}">
         {% csrf_token %}
-
+        
         {{ form.non_field_errors | safe }}
         <div class="invalid-feedback">
             {{ form.non_field_errors | safe }}
         </div>
-        <h1 class="h3 mb-3 fw-normal">Create your account</h1>
+        <h1 class="h1 mb-3 fw-normal">Create your account</h1>
+        <p>
+            Already have an account? <a class="link-primary link-underline link-underline-opacity-0" href="{{ login_url }}">Sign in</a>.
+        </p>
         <!-- {{ form.as_p }} -->
         <div class="invalid-feedback">
             {{ form.username.errors | safe }}
@@ -38,14 +38,15 @@
         {% if redirect_field_value %}
         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
         {% endif %}
-        <button class="btn btn-primary w-100 py-2" type="submit">Sign up</button>
+        <button class="btn btn-primary w-100 py-2 my-2" type="submit">Sign up</button>
     </form>
     <div>
-        <h4 class="m-3 fw-normal">Password requirements</h4>
+        <h2 class="h3 mt-3 fw-normal">Password requirements:</h2>
         <ul>
-            <li>8 or more characters</li>
-            <li>Be cool</li>
-            <li>not be similar to user name</li>
+            <li>Must be 8 or more characters</li>
+            <li>Can't be entirely numeric</li>
+            <li>Can't be too similar to username</li>
+            <li>Can't be a commonly used password</li>
         </ul>
     </div>
 </div>
