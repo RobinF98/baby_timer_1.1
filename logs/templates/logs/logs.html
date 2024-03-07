@@ -27,14 +27,8 @@ FOR BUTTON GROUP SCROLL
     </div>
     <div class="row">
         <div class="btn-group" role="group" aria-label="Basic example">
-            <a href="{% url 'add-diaper' baby.id %}">
-                <button type="button" class="btn btn-primary">Nappy</button>
-            </a>
-            <button type="button" class="btn btn-primary">Feed</button>
-            <a href="{% url 'add-sleep' baby.id %}">
-                <button type="button" class="btn btn-primary">Sleep</button>
-            </a>
-            <button type="button" class="btn btn-primary">Medication</button>
+            <a href="{% url 'add-diaper' baby.id %}" class="btn btn-outline-primary">Add diaper</a>
+            <a href="{% url 'add-sleep' baby.id %}" class="btn btn-outline-primary">Add sleep</a>
         </div>
     </div>
 </div>
@@ -44,30 +38,24 @@ FOR BUTTON GROUP SCROLL
         <ul class="list-group">
             {% for entry in logs_list %}
             <li>
-                <a href="{% url entry|to_class_name|to_edit_url entry.id %}" class="list-group-item list-group-item-action">
+                <a href="{% url entry|to_class_name|to_edit_url entry.id %}"
+                    class="list-group-item list-group-item-action">
                     <div class="row">
-                        <div class="col-md-4">
-                            <table class="table table-dark">
-                                <tbody>
-                                    <tr>
-                                        <td>{{entry|to_class_name}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            {{entry.time}}
-                                            {% if entry|to_class_name == "Sleep" %}
-                                            to {{entry.end_time}}
-                                            </td>
-                                            <tr>
-                                                <td>
-                                                    Slept for {{entry.end_time|timeuntil:entry.time}}
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="col-md-4 ">
+                            <ul class="list-group">
+                                <li class="list-group-item">{{entry|to_class_name}}</li>
+                                <li class="list-group-item">
+                                    <strong>{{entry.time}}</strong>
+                                    {% if entry|to_class_name == "Sleep" %}
+                                    to <strong>{{entry.end_time}}</strong>
+                                </li>
+                                <li class="list-group-item">
+                                    Slept for {{entry.end_time|timeuntil:entry.time}}
+                                    {% endif %}
+                                </li>
+                            </ul>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 px-4 py-2 fw-light">
                             {{entry.notes}}
                         </div>
                     </div>

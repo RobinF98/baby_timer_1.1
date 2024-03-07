@@ -217,7 +217,7 @@ class SleepCreateView(generic.CreateView):
         form = super().get_form()
         form.fields["time"].widget = DateTimePickerInput()
         form.fields["end_time"].widget = DateTimePickerInput()
-        form.fields["notes"].widget.attrs.update(cols=30, rows=5)
+        form.fields["notes"].widget.attrs.update(cols=20, rows=5)
         # TODO SET THE BELOW TO WHAT IT NEEDS TO BE I GUESS - SLEEP DURATION THING SO DATE TIME FIELD WITH TIME WIDGET?
         # form.fields["duration"] = forms.DurationField(required=False, disabled=True)
         # form.fields["duration"].widget = TimePickerInput()
@@ -264,7 +264,7 @@ class SleepUpdateView(generic.UpdateView):
         form.fields["end_time"] = forms.DateTimeField()
         form.fields["time"].widget = DateTimePickerInput()
         form.fields["end_time"].widget = DateTimePickerInput()
-        form.fields["notes"].widget.attrs.update(cols=30, rows=5)
+        form.fields["notes"].widget.attrs.update(cols=20, rows=5)
         # TODO SET THE BELOW TO WHAT IT NEEDS TO BE I GUESS - SLEEP DURATION THING SO DATE TIME FIELD WITH TIME WIDGET?
         # form.fields["duration"] = forms.DurationField(required=False, disabled=True)
         # form.fields["duration"].widget = TimePickerInput()
