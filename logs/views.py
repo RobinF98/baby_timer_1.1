@@ -105,6 +105,11 @@ class BabyUpdateView(generic.edit.UpdateView):
         initial["due_date"] = baby_object.due_date
         return initial
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["edit_view"] = True
+        return context
+
     def form_valid(self, form):
         form.save()
         return HttpResponseRedirect(reverse("home"))
