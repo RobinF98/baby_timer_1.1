@@ -2,48 +2,37 @@
 {% load custom_filters %}
 
 {% block content %}
-<!-- buttonsup
-    top for adding logs, or a dropown ,
 
-then below a list of all logs 
-will need create pages for feed sleep meds , also view, edit, and delete-->
-<!-- is this a list view? problably. that would work for the logs and then have a row up at the top with add buttons etc etc
-FOR BUTTON GROUP SCROLL
-.pre-scrollable {
-  max-height: 340px;
-  overflow-y: scroll;
-}-->
-<div class="container-fluid">
+<div class="container-fluid p-3">
     <div class="row">
-        <div class="col">
-            <h3>{{ baby.baby_name }}</h3>
-            <small class="text-muted">{{ baby.user }}</small>
+        <div class="col pb-3">
+            <h1 class="h2 fw-normal">{{ baby.baby_name }}</h1>
+            <!-- <small class="text-muted">{{ baby.user }}</small> -->
         </div>
     </div>
-</div>
-<div class="container-fluid">
-    <div class="row">
 
-    </div>
-    <div class="row">
-        <div class="btn-group" role="group" aria-label="Basic example">
-            <a href="{% url 'add-diaper' baby.id %}" class="btn btn-outline-primary">Add diaper</a>
-            <a href="{% url 'add-sleep' baby.id %}" class="btn btn-outline-primary">Add sleep</a>
+    <div class="row m-auto">
+        <div class="col w-75">
+            <div class="btn-group w-100" role="group" aria-label="Basic example">
+                <a href="{% url 'add-diaper' baby.id %}" class="btn btn-outline-primary">Add diaper</a>
+                <a href="{% url 'add-sleep' baby.id %}" class="btn btn-outline-primary">Add sleep</a>
+            </div>
         </div>
     </div>
-</div>
-<div class="container-fluid">
-    <!--consider making into a striped table -->
     <div class="row">
-        <ul class="list-group">
+        <ul class="list-group list-unstyled logs-list">
             {% for entry in logs_list %}
-            <li>
+            <li class="border-0">
                 <a href="{% url entry|to_class_name|to_edit_url entry.id %}"
-                    class="list-group-item list-group-item-action">
+                    class="border-0 pt-2 list-group-item list-group-item-action">
                     <div class="row">
-                        <div class="col-md-4 ">
+                        <div class="col-md-6 ">
                             <ul class="list-group">
-                                <li class="list-group-item">{{entry|to_class_name}}</li>
+                                <li class="list-group-item"><strong>{{entry|to_class_name}}</strong>
+                                    {% if entry|to_class_name == "Diaper" %}
+                                     | {{entry.get_type_display}}
+                                    {% endif %}
+                                </li>
                                 <li class="list-group-item">
                                     <strong>{{entry.time}}</strong>
                                     {% if entry|to_class_name == "Sleep" %}
@@ -55,7 +44,7 @@ FOR BUTTON GROUP SCROLL
                                 </li>
                             </ul>
                         </div>
-                        <div class="col-md-4 px-4 py-2 fw-light">
+                        <div class="col-md-6 px-4 py-2 fw-light">
                             {{entry.notes}}
                         </div>
                     </div>
