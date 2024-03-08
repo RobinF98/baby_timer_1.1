@@ -161,7 +161,8 @@ This project made good use of the following:
   
 - ### MORAL SUPPORT
    - The timing of this project was not ideal, to say the least. Without going into details I want to give a HUGE thanks to my mentor, [Juliia](https://github.com/IuliiaKonovalova),
-   - And my partner, Nicole, who put up with far more than her fair share of me being a stressed-out sleep-deprived horrible goblin.
+   - My partner, Nicole, who put up with far more than her fair share of me being a stressed-out sleep-deprived horrible goblin.
+   - And of course the Student Support team at CI, for being so understanding and helpful on my extension requests.
 
  ---
 
