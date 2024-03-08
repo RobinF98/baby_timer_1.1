@@ -2,21 +2,33 @@
 # from typing import Any
 # from urllib import request
 from django import forms
-from django.forms.models import BaseModelForm
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect, render, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.views import generic, View
+from django.views.generic.detail import SingleObjectMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.models import User
-from django.urls import reverse, reverse_lazy
-from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput, TimePickerInput
-from django.core.exceptions import ValidationError
-# from requests import options
+from django.urls import reverse
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput
 from operator import attrgetter
 from itertools import chain
 from .models import Baby, Diaper, Sleep
 
 # Create your views here.
+
+
+class UserAccessMixin(LoginRequiredMixin, UserPassesTestMixin, SingleObjectMixin):
+    """
+        Prevents users from accessing babies and baby logs that are not
+        registered to them.
+    """
+    def test_func(self):
+        # check logged in User is the User who created the current Baby:
+        if self.model.__name__ != "Baby":
+            return self.request.user == self.get_object().baby.user
+        return self.request.user == self.get_object().user
+
+    def handle_no_permission(self):
+        return redirect("/")
 
 
 class BabyListView(LoginRequiredMixin, generic.ListView):
@@ -25,18 +37,6 @@ class BabyListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         return self.model.objects.filter(user=self.request.user)
-
-
-class UserAccessMixin(LoginRequiredMixin, UserPassesTestMixin):
-    """
-        Prevents users from accessing babies and baby logs that are not 
-        registered to them.
-    """
-    def test_func(self):
-        return self.request.user == self.get_object().user
-
-    def handle_no_permission(self):
-        return redirect("/")
 
 
 class BabyDetailView(UserAccessMixin, generic.detail.DetailView,):
@@ -48,7 +48,7 @@ class BabyDetailView(UserAccessMixin, generic.detail.DetailView,):
         return context
 
 
-class BabyCreateView(generic.edit.CreateView):
+class BabyCreateView(LoginRequiredMixin, generic.edit.CreateView):
     # set user field to current user
 
     model = Baby
@@ -78,7 +78,7 @@ class BabyCreateView(generic.edit.CreateView):
         return HttpResponseRedirect(reverse("home"))
 
 
-class BabyUpdateView(generic.edit.UpdateView):
+class BabyUpdateView(UserAccessMixin, generic.edit.UpdateView):
     model = Baby
     template_name = "logs/generic_form.html"
 
@@ -115,18 +115,18 @@ class BabyUpdateView(generic.edit.UpdateView):
         return HttpResponseRedirect(reverse("home"))
 
 
-class BabyDeleteView(generic.edit.DeleteView):
+class BabyDeleteView(UserAccessMixin, generic.edit.DeleteView):
     model = Baby
     template_name = "baby_detail.html"
     success_url = "/"
 
 
-class LogsView(generic.ListView, View):
+class LogsView(UserAccessMixin, generic.ListView, View):
     model = Baby
     template_name = "logs/logs.html"
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = {}
         context["diapers"] = Diaper.objects.filter(baby_id=self.kwargs["pk"])
         context["sleeps"] = Sleep.objects.filter(baby_id=self.kwargs["pk"])
         context["baby"] = Baby.objects.filter(id=self.kwargs["pk"])[0]
@@ -139,7 +139,7 @@ class LogsView(generic.ListView, View):
         return context
 
 
-class DiaperCreateView(generic.CreateView):
+class DiaperCreateView(LoginRequiredMixin, generic.CreateView):
     model = Diaper
     template_name = "logs/generic_form.html"
     fields = [
@@ -168,7 +168,7 @@ class DiaperCreateView(generic.CreateView):
         return HttpResponseRedirect(reverse("logs", args=[form.instance.baby_id]))
 
 
-class DiaperUpdateView(generic.edit.UpdateView):
+class DiaperUpdateView(UserAccessMixin, generic.edit.UpdateView):
     model = Diaper
     template_name = "logs/generic_form.html"
     fields = [
@@ -204,7 +204,7 @@ class DiaperUpdateView(generic.edit.UpdateView):
         return HttpResponseRedirect(reverse("logs", args=[form.instance.baby_id]))
 
 
-class DiaperDeleteView(generic.edit.DeleteView):
+class DiaperDeleteView(UserAccessMixin, generic.edit.DeleteView):
     model = Diaper
     template_name = "logs/generic_form.html"
 
@@ -212,7 +212,7 @@ class DiaperDeleteView(generic.edit.DeleteView):
         return reverse("logs", args=[self.object.baby_id])
 
 
-class SleepCreateView(generic.CreateView):
+class SleepCreateView(LoginRequiredMixin, generic.CreateView):
     model = Sleep
     template_name = "logs/generic_form.html"
     fields = [
@@ -249,7 +249,7 @@ class SleepCreateView(generic.CreateView):
         return HttpResponseRedirect(reverse("logs", args=[form.instance.baby_id]))
 
 
-class SleepUpdateView(generic.UpdateView):
+class SleepUpdateView(UserAccessMixin, generic.UpdateView):
     model = Sleep
     template_name = "logs/generic_form.html"
     fields = [
@@ -297,7 +297,7 @@ class SleepUpdateView(generic.UpdateView):
         return HttpResponseRedirect(reverse("logs", args=[form.instance.baby_id]))
 
 
-class SleepDeleteView(generic.edit.DeleteView):
+class SleepDeleteView(UserAccessMixin, generic.edit.DeleteView):
     model = Sleep
     template_name = "logs/generic_form.html"
 
