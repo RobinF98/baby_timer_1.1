@@ -21,19 +21,19 @@
         </div>
         <div class="form-floating">
                 {% render_field form.username placeholder="Username" id="username" name="username" type="text" autocomplete="username" required="True" class="form-control" %}
-            <label for="floatingInput">Username</label>
+            <label for="username">Username</label>
         </div>
         {{ form.password1.errors | safe }}
         <div class="form-floating">
             {% render_field form.password1 id="password1" placeholder="Password" type="password" required="True" class="form-control" %}
-            <label for="floatingPassword">Password</label>
+            <label for="password1">Password</label>
         </div>
         <div class="invalid-feedback">
             {{ form.password2.errors | safe }}
         </div>
         <div class="form-floating">
             {% render_field form.password2 id="password2" placeholder="Confirm password" type="password" required="True" class="form-control" %}
-            <label for="floatingPassword">Confirm Password</label>
+            <label for="password2">Confirm Password</label>
         </div>
         {% if redirect_field_value %}
         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
