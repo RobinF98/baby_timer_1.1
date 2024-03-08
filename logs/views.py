@@ -14,7 +14,7 @@ from itertools import chain
 from .models import Baby, Diaper, Sleep
 
 # Create your views here.
-
+    
 
 class UserAccessMixin(LoginRequiredMixin, UserPassesTestMixin,
                       SingleObjectMixin):
