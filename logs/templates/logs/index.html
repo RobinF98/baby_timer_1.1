@@ -2,8 +2,8 @@
 
 {% block content %}
 
-<div class="container-fluid p-3">
-    <h1>Baby List</h1>
+<div class="container-fluid p-3 pb-0">
+    <h1 class="h2 fw-normal mx-4 mt-2">Baby List</h1>
     {% for baby in baby_list %}
     <div class="row m-4">
         <ul class="list-group list-group-horizontal-md border p-0">
@@ -33,12 +33,11 @@
     {% endfor %}
 </div>
 
-<br>
 </div>
-<div class="container">
-    <div class="row">
-        <div class="col-6 col-md-4">
-            <a href="{% url 'add-baby' %}">
+<div class="container-fluid ">
+    <div class="row mx-3">
+        <div class="col-12 col-md-4 d-grid gap-2 d-md-block">
+            <a href="{% url 'add-baby' %}" class="btn btn-success">
                 Add new baby
             </a>
         </div>
