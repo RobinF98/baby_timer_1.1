@@ -1,64 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Baby List</h1>
 
-<!-- {% comment %}
-        {% for baby in baby_list %}
-             <div class="row">
-                <div class="col-4 col-md-3">
-                    <a class="btn btn-primary" href="{% url 'baby-detail' baby.id %}">
-                        {{ baby.baby_name }}
+<div class="container-fluid p-3">
+    <h1>Baby List</h1>
+    {% for baby in baby_list %}
+    <div class="row m-4">
+        <ul class="list-group list-group-horizontal-md border p-0">
+            <li class="list-group-item p-0 border-0 flex-fill">
+                <ul class="list-group border-0">
+                    <a href="{% url 'baby-detail' baby.id %}"
+                        class="list-group-item list-group-item-action list-group-item-primary border-bottom-0">
+                        {{baby.baby_name}}
                     </a>
-                </div>
-                <div class="col-2">
-                    <a class="btn btn-primary" href="{% url 'logs' baby.id %}">
-                        Logs
-                    </a>
-                </div>
-                <div class="col-4 col-md-3">
-                    <a class="btn btn-primary" href="{% url 'edit-baby' baby.id %}">
-                        Edit
-                    </a>
-                </div>
-            </div>
-            <div>{{ baby.user }}</div>
-            <br> 
-            {% endfor %}{% endcomment %} -->
-<div class="container-fluid">
-    <!--consider making into a striped table -->
-        {% for baby in baby_list %}
-                <div class="row my-4">
-                    <!-- <div class="col-11 col-md-8 mx-auto"> -->
-                        <ul class="list-group list-group-horizontal-md border p-0">
-                            <li class="list-group-item p-0 border-0 flex-fill">
-                                <ul class="list-group border-0">
-                                    <a href="{% url 'baby-detail' baby.id %}" class="list-group-item list-group-item-action list-group-item-primary border-bottom-0">
-                                        {{baby.baby_name}}
-                                    </a>
-                                    <li class="list-group-item border-bottom-0">
-                                        Born: {{baby.birthday}}
-                                    </li>
-                                    <li class="list-group-item p-0">
-                                        <!-- <ul class="list-group list-group-horizontal flex-fill"> -->
-                                        <div class="btn-group w-100">
-                                            <a href="{% url 'logs' baby.id %}" class="btn btn-outline-primary btn-edit-logs">Logs</a>
-                                            <a href="{% url 'edit-baby' baby.id %}" class="btn btn-outline-primary btn-edit-logs">Edit</a>
-                                        </div>
-                                        <!-- </ul> -->
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="list-group-item flex-fill border-0">
-                                {{baby.notes}}
-                            </li>
-                        </ul>
-                    <!-- </div> -->
-                </div>
-            {% endfor %}
+                    <li class="list-group-item border-bottom-0">
+                        Born: {{baby.birthday}}
+                    </li>
+                    <li class="list-group-item p-0">
+                        <div class="btn-group w-100">
+                            <a href="{% url 'logs' baby.id %}" class="btn btn-outline-primary btn-edit-logs">Logs</a>
+                            <a href="{% url 'edit-baby' baby.id %}"
+                                class="btn btn-outline-primary btn-edit-logs">Edit</a>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li class="list-group-item w-50 border-0 p-2">
+                {{baby.notes}}
+            </li>
+        </ul>
     </div>
+    {% endfor %}
+</div>
 
-    <br>
+<br>
 </div>
 <div class="container">
     <div class="row">
