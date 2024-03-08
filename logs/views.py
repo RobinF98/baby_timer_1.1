@@ -6,7 +6,7 @@ from django.forms.models import BaseModelForm
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic, View
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.urls import reverse, reverse_lazy
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput, TimePickerInput
@@ -27,7 +27,19 @@ class BabyListView(LoginRequiredMixin, generic.ListView):
         return self.model.objects.filter(user=self.request.user)
 
 
-class BabyDetailView(generic.detail.DetailView):
+class UserAccessMixin(LoginRequiredMixin, UserPassesTestMixin):
+    """
+        Prevents users from accessing babies and baby logs that are not 
+        registered to them.
+    """
+    def test_func(self):
+        return self.request.user == self.get_object().user
+
+    def handle_no_permission(self):
+        return redirect("/")
+
+
+class BabyDetailView(UserAccessMixin, generic.detail.DetailView,):
     model = Baby
 
     def get_context_data(self, **kwargs):
@@ -204,15 +216,6 @@ class SleepCreateView(generic.CreateView):
         "notes",
     ]
 
-    class Meta:
-        model = Sleep
-        fields = [
-            "time",
-            "end_time",
-            "notes",
-            # "duration",
-        ]
-
     def get_form(self):
         form = super().get_form()
         form.fields["time"].widget = DateTimePickerInput()
@@ -249,15 +252,6 @@ class SleepUpdateView(generic.UpdateView):
         "end_time",
         "notes",
     ]
-
-    class Meta:
-        model = Sleep
-        fields = [
-            "time",
-            "end_time",
-            "notes",
-            # "duration",
-        ]
 
     def get_form(self):
         form = super().get_form()
@@ -296,3 +290,11 @@ class SleepUpdateView(generic.UpdateView):
 
         form.save()
         return HttpResponseRedirect(reverse("logs", args=[form.instance.baby_id]))
+
+
+class SleepDeleteView(generic.edit.DeleteView):
+    model = Sleep
+    template_name = "logs/generic_form.html"
+
+    def get_success_url(self, **kwargs):
+        return reverse("logs", args=[self.object.baby_id])
