@@ -1,39 +1,97 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
-
-Welcome,
-
-This is the Code Institute student template for Codeanywhere. If you are using Gitpod then you need [this template](https://github.com/Code-Institute-Org/gitpod-full-template) instead.  We have preinstalled all of the tools you need to get started. It's perfectly ok to use this template as the basis for your project submissions.
-
-You can safely delete this README.md file, or change it for your own project. Please do read it at least once, though! It contains some important information about Codeanywhere and the extensions we use. Some of this information has been updated since the video content was created. The last update to this file was: **August 30th, 2023**
-
-## Codeanywhere Reminders
-
-To run a frontend (HTML, CSS, Javascript only) application in Codeanywhere, in the terminal, type:
-
-`python3 -m http.server`
-
-A button should appear to click: _Open Preview_ or _Open Browser_.
-
-To run a frontend (HTML, CSS, Javascript only) application in Codeanywhere with no-cache, you can use this alias for `python3 -m http.server`.
-
-`http_server`
-
-To run a backend Python file, type `python3 app.py`, if your Python file is named `app.py` of course.
-
-A button should appear to click: _Open Preview_ or _Open Browser_.
-
-In Codeanywhere you have superuser security privileges by default. Therefore you do not need to use the `sudo` (superuser do) command in the bash terminal in any of the lessons.
-
-To log into the Heroku toolbelt CLI:
-
-1. Log in to your Heroku account and go to _Account Settings_ in the menu under your avatar.
-2. Scroll down to the _API Key_ and click _Reveal_
-3. Copy the key
-4. In Codeanywhere, from the terminal, run `heroku_config`
-5. Paste in your API key when asked
-
-You can now use the `heroku` CLI program - try running `heroku apps` to confirm it works. This API key is unique and private to you so do not share it. If you accidentally make it public then you can create a new one with _Regenerate API Key_.
+# BABY TIMER
 
 ---
 
-Happy coding!
+Baby timer is a simple but useful website that you can use to log your baby's feeds and diapers.
+It features user accounts and the ability to add multiple babies.
+View all your baby's sleeps and diapers in one list, with notes for each entry on the side.
+Easily edit and delete log entries, and with it's responsive design you can take Baby Timer with you no matter what device you're using.
+
+---
+
+## Features
+
+---
+
+- ### Nav bar
+
+  - The responsive naviagtion bar provides quick and easy access to the things you will need most.
+  - Here you will find a logs dropdown, the homepage link, and the logout button.
+  - On smaller pages the nav bar switches to a dropdown to save space
+
+- ### Sign up / Sign in
+
+  - The sign in and sign up pages are styled neatly, making extensive use of bootstrap templates.
+  - New users can create an account that they can use to add babies and entries.
+  - User authentication and sign in / sign up is powered by AllAuth
+
+- ### Date / Time Input
+
+  - Users can easily select dates and times for entries (like baby's birthday, or sleep times)
+  - This is done using the bootstrap_datepicker_plus widgets, which provide an easy to use gui for date / time selection
+
+- ### Footer
+
+  - The footer is simple, featuring nothing more than the year of creation and a link to the project's GitHub repository.
+
+- ### Home Page
+
+  - Here the user can see all babies registered to them, and add babies by clicking on the green "Add new baby' buttons at the bottom of the page
+
+- ### Logs page
+
+  - Users can see all log entries collated in one list on the logs page.
+  - From here users can click/tap on log entries to edit or delete them.
+
+- ### Add entry pages
+
+  - Users can add log entries or babies on a neatly styled form.
+  - The form has all fields the entry or baby requires, including a notes text field, which can be used for any additional information.
+  - The form features bright submit/delete/cancel buttons for intuitive control.
+  - The form does valdation on user input, ensuring all necessary fields are filled and preventing things like a sleep entry ending before it began.
+
+- ### Delete / logout confirmation
+
+  - Anytime the user is about to make a critical change to the site, such as logging out or deleting an entry, a confirmation modal appears.
+  - The modal makes it clear to the user what will happen if they continue, so as to prevent accidental deletions or logouts.
+
+- ### Access control
+
+  - Users are require to be logged in to access any of the site's functionality.
+  - Users are also unable to view the logs of a baby registered to another user.
+  - If this is attempted by modifying the url, the user is redirected to the home page.
+
+## Future Features
+
+---
+
+- ### Additional entry types
+
+  - Despite what some may think, babies do a good bit more than just sleeping and soiling diapers.
+  - Functionality for feeds (breast, bottle, and solid foods) can be added easily
+  - Functionality for any medication the baby may be taking can be added as well.
+
+- ### AllAuth email verification
+
+  - As it currently stands site is accessed using a username and password. While this is secure, there is a good bit more that can be done in terms of user accesiability.
+  - AllAuth offers built in email verification, forgot password, and password reset functionality.
+
+## Testing
+
+---
+
+- The site was tested for responsiveness on the Firefox and Chrome browsers, using the developer tools that come with the browsers.
+- As the site is styled almost exclusively bootstrap, the responsiveness is very good by default.
+- Of primary importance is how the site operates on the backend.
+  - Extensive manual testing was conducted to ensure teh site behaved as intended, with no strange redirects or buttons doing anything other than what they say they will do.
+  - Users can add/edit/delete babies/diapers/sleep entries.
+  - Users can view all entries registered to a particular baby.
+  - Users are redirected if they attempt to access another user's baby or baby's logs via the url.
+
+- ### BUGS
+  - [SOLVED] Users can access other user's records by changing pk in url
+    - Solved by creating UserAccessMixin which checks to see if the user that the records being requested are registered to is the current session user.
+  - [SOLVED] Delete confirmation modal deletes object when cancel button is clicked
+    - Solved by moving cancel button outside the delete form heirarchy and adding 
+    ```type="submit"```
+    to the Delete button attributes.
