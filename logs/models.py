@@ -36,12 +36,13 @@ class Diaper(models.Model):
         "DY": "Dirty",
         "WD": "Wet and Dirty"
     }
-    baby = models.ForeignKey(Baby, on_delete=models.CASCADE, blank=False,)
+    baby = models.ForeignKey(Baby, on_delete=models.CASCADE, blank=False)
     time = models.DateTimeField(default=datetime.now, blank=False)
     type = models.CharField(
         choices=DIAPER_TYPE_CHOICES,
         default="WT",
         blank=False,
+        max_length=10
         )
     notes = models.TextField(blank=True,)
 
@@ -69,6 +70,7 @@ class Feed(models.Model):
         choices=FEED_TYPE_CHOICES,
         default="LB",
         blank=False,
+        max_length=10,
     )
     notes = models.TextField(blank=True,)
 
@@ -84,7 +86,7 @@ class Medication(models.Model):
     baby = models.ForeignKey(Baby, on_delete=models.CASCADE,)
     med_name = models.CharField("medication", max_length=50, blank=False)
     default_dose = models.PositiveIntegerField(blank=True)
-    dose_unit = models.CharField(choices=MED_UNIT_CHOICES, default="ml", blank=True)
+    dose_unit = models.CharField(choices=MED_UNIT_CHOICES, default="ml", blank=True, max_length=10,)
     notes = models.TextField(blank=True,)
 
     def __str__(self):
